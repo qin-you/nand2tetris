@@ -43,4 +43,34 @@ CHIP ALU {
 
     PARTS:
    // Put you code here:
+   // 1. process input:             zx nx zy ny
+   // 2. execute function:          f
+   // 3. process output:            no
+   // 4. set flags for the output:  zr ng
+
+        // zx nx
+        Mux16(a=x, b=false, sel=zx, out=x1);
+        Not16(in=x1, out=x2);
+        Mux16(a=x1, b=x2, sel=nx, out=x3);
+
+        // zy ny
+        Mux16(a=y, b=false, sel=zy, out=y1);
+        Not16(in=y1, out=y2);
+        Mux16(a=y1, b=y2, sel=ny, out=y3);
+
+        // f: sum, and
+        Add16(a=x3, b=y3, out=s);
+        And16(a=x3, b=y3, out=a);
+        Mux16(a=a, b=s, sel=f, out=o1);
+
+        // no
+        Not16(in=o1, out=o2);
+        Mux16(a=o1, b=o2, sel=no, out=out, out=o3);
+
+        // zr   new: Or16Way
+        Or16Way(in=o3, out=t);
+        Mux(a=true, b=false, sel=t, out=zr);
+
+        // ng
+        IsNeg(in=o3, out=ng);        
 }

@@ -1,0 +1,29 @@
+
+## 目标
+实现ALU电路
+
+
+## 顺序
+半加器  全加器  16位加法  16位自增 ALU单元
+```
+   // 1. process input:             zx nx zy ny
+   // 2. execute function:          f
+   // 3. process output:            no
+   // 4. set flags for the output:  zr ng
+```
+
+
+
+## 注
+- 本实验在实现ALU单元时还增加了Or16Way.hdl  IsNet.hdl两个芯片，原因如下：
+```hdl
+Mux16(a=out1, b=out2, sel=no, out=out3);
+Or(a=out3[15], b=false, out=ng);  
+```
+这样写报错，不能对内部节点（out3）取部分输出引脚。 可以新建芯片，对新芯片的in信号这样操作没问题。 
+
+
+- 务必测试 ALU电路是否正确， `diff ALU.out  ALU.cmp`没有输出即可。
+
+
+- 有必要先阅读《计算机系统要素》第二章

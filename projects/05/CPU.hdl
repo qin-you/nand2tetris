@@ -1,8 +1,3 @@
-// This file is part of www.nand2tetris.org
-// and the book "The Elements of Computing Systems"
-// by Nisan and Schocken, MIT Press.
-// File name: projects/05/CPU.hdl
-
 /**
  * The Hack CPU (Central Processing unit), consisting of an ALU,
  * two registers named A and D, and a program counter named PC.
@@ -39,5 +34,63 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+
+    // read this code with the cpu circuit diagram supplied by book:
+
+
+    // A-instruction: 0xxxx..    nothing to do with ALU
+    // C-instruction: 111 acccccc ddd jjj   head:3 comp:7  dest:3  jump:3  must know every bit's meaning
+
+    DMux(in=true, sel=instruction[15], a=isA, b=isC);
+
+
+    // top left Mux16 chip
+    And(a=isC, b=instruction[5], out=isALU2A);  // [5]: save ALU's out to A-Reg
+    Mux16(a=instruction, b=outALU, sel=isALU2A, out=ToA);
+
+
+    // A Reg's load : A-instruction or save ALU to A Reg
+    Or(a=isA, b=isALU2A, out=loadA);
+    // A Reg
+    ARegister(in=ToA, load=loadA, out=outA, out[0..14]=addressM);
+
+
+    // D reg's load
+    And(a=instruction[4], b=isC, out=loadD);        // [4]: if outALU's dest is D
+    // D Reg
+    DRegister(in=outALU, load=loadD, out=outD);
+
+    
+    // central Mux16 : select a input to ALU
+    Mux16(a=outA, b=inM, sel=instruction[12], out=outAM);   // [12]: means if input is M
+
+
+    // ALU, A-instruction not need ALU
+    ALU(x=outD, y=outAM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=outALU, out=outM, zr=zr, ng=ng);
+
+
+    // writeM: if C-instruction and dest denotes M
+    And(a=isC, b=instruction[3], out=writeM);   // [3]: save ALU's out to M
+
+
+    // pc:
+    // judge positive
+    Or(a=zr, b=ng, out=zn);
+    Not(in=zn, out=po);
+    // parse jmp condition
+    And(a=isC, b=instruction[0], out=isGT);
+    And(a=isC, b=instruction[1], out=isEQ);
+    And(a=isC, b=instruction[2], out=isLT);
+
+    // judge if jump
+    And(a=isGT, b=po, out=JumpGT);
+    And(a=isEQ, b=zr, out=JumpEQ);
+    And(a=isLT, b=ng, out=JumpLT);
+    Or(a=JumpGT, b=JumpEQ, out=isJmp1);
+    Or(a=isJmp1, b=JumpLT, out=isJmp);
+
+    // Not(in=isJmp, out=inc);             // not necessary, jmp's priority is higher than inc in PC
+
+    PC(in=outA, load=isJmp, inc=true, reset=reset, out[0..14]=pc);
+
 }

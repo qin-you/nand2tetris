@@ -1,8 +1,3 @@
-// This file is part of www.nand2tetris.org
-// and the book "The Elements of Computing Systems"
-// by Nisan and Schocken, MIT Press.
-// File name: projects/05/Memory.hdl
-
 /**
  * The complete address space of the Hack computer's memory,
  * including RAM and memory-mapped I/O. 
@@ -28,4 +23,24 @@ CHIP Memory {
 
     PARTS:
     // Put your code here:
+
+    // RAM      000 0000 0000 0000 ~ 0111 1111 1111 1111 111    size:16k    startaddr:0     maxaddr: 16k-1
+    // Screen   100 0000 0000 0000 ~ 1011 1111 1111 1111 111    size:8k     startaddr:16k   maxaddr:24k-1
+    // KBD      110 0000 0000 0000      size:1  startaddr:24k   maxaddr:24k
+
+    // so, addr MSB:   00 01: RAM   10:Screen   11:KBD
+
+    DMux4Way(in=load, sel=address[13..14], a=l1, b=l2, c=lS, d=lK);
+
+    Or(a=l1, b=l2, out=lR);
+
+    RAM16K(in=in, load=lR, address=address[0..13], out=o1);
+
+    Screen(in=in, load=lS, address=address[0..12], out=o2);
+
+    Keyboard(out=o3);
+
+    Mux4Way16(a=o1, b=o1, c=o2, d=o3, sel=address[13..14], out=out);
+
+
 }

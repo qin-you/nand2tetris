@@ -1,0 +1,79 @@
+
+## Tasks
+使用HACK汇编语言，实现乘法 、 屏幕显示、 键盘读取
+
+
+## Hints
+
+1. 乘法问题 看懂书上的求和程序示例基本就没问题。
+
+2. SCREEN是屏幕起始地址 
+3. 键盘、屏幕实验： 汇编相当于实现以下伪代码：
+
+```c
+int current	= SCREEN;
+int maxaddr	= TOP
+int main(void)
+{
+	while (1) {
+		if (getcharKBD() != 0) {
+			if (isFull())
+				continue;
+			blacken_one_word();
+		}
+		else {
+			if (isclear())
+				continue;
+			whiten_one_word();
+		}
+	}
+}
+
+int getcharKBD(void)
+{
+	return *(word *)KBD;
+}
+
+int isFull(void)
+{
+	return current > maxaddr;
+}
+
+int isClear(void)
+{
+	return current <= SCREEN;
+}
+
+void blacken_one_word(void)
+{
+	*(word *)current = -1;
+	current++;
+}
+
+void whiten_one_word(void)
+{
+	*(word *)(current - 1) = 0;
+	current--;
+}
+```
+
+4. 屏幕测试程序需要在CPUEmulator里顶部的Animate 选项中选择No animation。 否则无法显示屏幕效果。
+
+
+
+## Foundations of HACK Language
+
+@something	把something放到寄存器A  如@3 表示 A<-3  寄存器A是隐含的，被M使用
+M寄存器		memory[A]
+D寄存器		数据寄存器，灵活使用，可做中转空间
+(SOMETHING)	标签，代表下一行的地址
+D;JGT		根据D中数据与0比较结果，Greater than 0就跳转到A里的地址去。 还有JLT JMP等。
+
+
+
+## 测试方法
+windows下：
+打开 Tool下JackCompiler.bat，可以把asm编译成二进制文件并保存成.hack
+
+打开 Tool下CPUEmulator.bat，加载测试二进制文件.hack   或者直接加载.asm汇编文件。 然后加载测试文件，启动测试，生成.out文件。比较结果。
+

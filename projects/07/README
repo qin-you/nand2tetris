@@ -1,0 +1,30 @@
+## 内容概述
+
+1. 本章内容：虚拟机，不适合所有语言。 
+基于虚拟机实现的语言：Java Python Scala
+不基于虚拟机实现：    C C++ Go Rust
+
+2. 虚拟机（VM）：即高级语言 到 机器语言（汇编） 的一层中间代码。 加个中间层可以极大提升可移植性，高级语言可以在任何实现了VM的机器上运行，而VM在不同平台的实现并不复杂。
+
+3. VM的实现： 堆栈机模型
+原理：任何算术表达式和布尔表达式都可以 转化成一系列堆栈上的简单操作，转化过程是可计算的。
+
+4. jack高级语言到hack二进制的过程：
+	fun.jack    --jack compiler--> 
+	fun.vm      --VM translator-->   
+	fun.asm     --Assembler-->
+	fun.hack  
+
+5. 本章实验就是实现VM translator 把给的那个的.vm中间语言代码，翻译成 Hack汇编语言
+
+6. 本书的章节安排和一般高级语言到机器语言的转换过程见书图7.1
+
+
+
+## 参考
+
+虚拟机这两章
+不是本人重点关注内容，只阅读书本内容足矣，lab部分暂舍去。
+为方便后续观看，这两章lab代码完全参考他人版本。
+
+https://github.com/kronosapiens/nand2tetris/blob/master/projects/07/VMtranslator.py

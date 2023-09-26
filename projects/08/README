@@ -1,0 +1,14 @@
+## 概述
+
+上一章是关于使用堆栈操作进行计算的
+
+本章介绍使用堆栈处理程序调用、嵌套、参数传递、递归和内存分配技术。 这些都在VM层实现
+
+
+
+## 参考
+虚拟机这两章
+不是本人重点关注内容，只阅读书本内容足矣，lab部分暂舍去。
+为方便后续观看，这两章lab代码完全参考他人版本。
+
+https://github.com/kronosapiens/nand2tetris/blob/master/projects/08/VMtranslator.py
